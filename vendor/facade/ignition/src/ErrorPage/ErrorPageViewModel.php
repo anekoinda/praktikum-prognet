@@ -51,7 +51,7 @@ class ErrorPageViewModel implements Arrayable
             return '';
         }
 
-        $throwableString = sprintf(
+        return sprintf(
             "%s: %s in file %s on line %d\n\n%s\n",
             get_class($this->throwable),
             $this->throwable->getMessage(),
@@ -59,8 +59,6 @@ class ErrorPageViewModel implements Arrayable
             $this->throwable->getLine(),
             $this->report->getThrowable()->getTraceAsString()
         );
-
-        return htmlspecialchars($throwableString);
     }
 
     public function telescopeUrl(): ?string
@@ -92,9 +90,7 @@ class ErrorPageViewModel implements Arrayable
 
     public function title(): string
     {
-        $message = htmlspecialchars($this->report->getMessage());
-
-        return "🧨 {$message}";
+        return "🧨 {$this->report->getMessage()}";
     }
 
     public function config(): array

@@ -146,7 +146,7 @@ class HeaderUtils
     }
 
     /**
-     * Generates an HTTP Content-Disposition field-value.
+     * Generates a HTTP Content-Disposition field-value.
      *
      * @param string $disposition      One of "inline" or "attachment"
      * @param string $filename         A unicode string

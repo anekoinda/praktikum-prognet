@@ -888,10 +888,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     public function betweenIncluded($date1, $date2): bool;
 
     /**
-     * Returns either day of week + time (e.g. "Last Friday at 3:30 PM") if reference time is within 7 days,
-     * or a calendar date (e.g. "10/29/2017") otherwise.
-     *
-     * Language, date and time formats will change according to the current locale.
+     * Returns either the close date "Friday 15h30", or a calendar date "10/09/2017" is farthest than 7 days from now.
      *
      * @param Carbon|\DateTimeInterface|string|null $referenceTime
      * @param array                                 $formats
@@ -4889,11 +4886,11 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Returns the minutes offset to UTC if no arguments passed, else set the timezone with given minutes shift passed.
      *
-     * @param int|null $minuteOffset
+     * @param int|null $offset
      *
      * @return int|static
      */
-    public function utcOffset(int $minuteOffset = null);
+    public function utcOffset(int $offset = null);
 
     /**
      * Returns the milliseconds timestamps used amongst other by Date javascript objects.

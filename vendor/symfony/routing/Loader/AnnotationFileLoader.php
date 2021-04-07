@@ -97,8 +97,10 @@ class AnnotationFileLoader extends FileLoader
         if (\defined('T_NAME_QUALIFIED')) {
             $nsTokens[\T_NAME_QUALIFIED] = true;
         }
+
         for ($i = 0; isset($tokens[$i]); ++$i) {
             $token = $tokens[$i];
+
             if (!isset($token[1])) {
                 continue;
             }
@@ -120,9 +122,6 @@ class AnnotationFileLoader extends FileLoader
                 $skipClassToken = false;
                 for ($j = $i - 1; $j > 0; --$j) {
                     if (!isset($tokens[$j][1])) {
-                        if ('(' === $tokens[$j] || ',' === $tokens[$j]) {
-                            $skipClassToken = true;
-                        }
                         break;
                     }
 

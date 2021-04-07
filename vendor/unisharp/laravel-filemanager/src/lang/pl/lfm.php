@@ -6,9 +6,6 @@ return [
     'nav-upload'        => 'Wgraj plik',
     'nav-thumbnails'    => 'Miniaturki',
     'nav-list'          => 'Lista',
-    'nav-sort'          => 'Sortuj',
-    'nav-sort-alphabetic'=> 'Sortuj alfabetycznie',
-    'nav-sort-time'     => 'Sortuj według czasu',
 
     'menu-rename'       => 'Zmień nazwę',
     'menu-delete'       => 'Usuń',
@@ -16,8 +13,6 @@ return [
     'menu-download'     => 'Pobierz',
     'menu-resize'       => 'Zmień rozmiar',
     'menu-crop'         => 'Przytnij',
-    'menu-move'         => 'Przenieś',
-    'menu-multiple'     => 'Zaznacz wiele',
 
     'title-page'        => 'Menedżer plików',
     'title-panel'       => 'Laravel FileManager',
@@ -39,7 +34,6 @@ return [
     'message-name'      => 'Nazwa folderu:',
     'message-rename'    => 'Zmień nazwę:',
     'message-extension_not_found' => 'Niestety, nie znaleziono wymaganych rozszerzeń. Zainstaluj gd lub imagick aby manipulować grafiką',
-    'message-drop'      => 'lub upuść pliki tutaj, aby je przesłać',
 
     'error-rename'      => 'Niestety, istnieje już plik o takiej nazwie!',
     'error-file-empty'  => 'You must choose a file!',
@@ -49,9 +43,7 @@ return [
     'error-folder-name' => 'Nazwa folderu nie może być pusta!',
     'error-folder-exist'=> 'Folder o tej nazwie już istnieje!',
     'error-folder-alnum'=> 'Dozwolone są jedynie nazwy alfanumeryczne!',
-    'error-folder-not-found'=> 'Nie znaleziono folderu! (:folder)',
     'error-mime'        => 'Nierozpoznawany MimeType: ',
-    'error-size'        => 'Przekroczono limit rozmiaru:',
     'error-instance'    => 'Wgrywany obiekt powinien być instanją UploadedFile',
     'error-invalid'     => 'Nieprawidłowe zapytanie',
     'error-other'       => 'Napotkano następujący błąd: ',
@@ -63,10 +55,6 @@ return [
     'btn-crop'          => 'Przytnij',
     'btn-cancel'        => 'Anuluj',
     'btn-resize'        => 'Zmień rozmiar',
-    'btn-confirm'       => 'Zatwierdź',
-    'btn-copy-crop'     => 'Kopiuj przycięte',
-    'btn-crop-free'     => 'Skaluj',
-    'btn-open'          => 'Otwórz',
 
     'resize-ratio'      => 'Stosunek:',
     'resize-scaled'     => 'Zmieniono rozmiar:',

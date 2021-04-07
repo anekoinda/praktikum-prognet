@@ -20,7 +20,6 @@ use Symfony\Component\Finder\Iterator\DepthRangeFilterIterator;
 use Symfony\Component\Finder\Iterator\ExcludeDirectoryFilterIterator;
 use Symfony\Component\Finder\Iterator\FilecontentFilterIterator;
 use Symfony\Component\Finder\Iterator\FilenameFilterIterator;
-use Symfony\Component\Finder\Iterator\LazyIterator;
 use Symfony\Component\Finder\Iterator\SizeRangeFilterIterator;
 use Symfony\Component\Finder\Iterator\SortableIterator;
 
@@ -623,9 +622,7 @@ class Finder implements \IteratorAggregate, \Countable
 
         $iterator = new \AppendIterator();
         foreach ($this->dirs as $dir) {
-            $iterator->append(new \IteratorIterator(new LazyIterator(function () use ($dir) {
-                return $this->searchInDirectory($dir);
-            })));
+            $iterator->append($this->searchInDirectory($dir));
         }
 
         foreach ($this->iterators as $it) {
@@ -657,8 +654,7 @@ class Finder implements \IteratorAggregate, \Countable
         } elseif ($iterator instanceof \Traversable || \is_array($iterator)) {
             $it = new \ArrayIterator();
             foreach ($iterator as $file) {
-                $file = $file instanceof \SplFileInfo ? $file : new \SplFileInfo($file);
-                $it[$file->getPathname()] = $file;
+                $it->append($file instanceof \SplFileInfo ? $file : new \SplFileInfo($file));
             }
             $this->iterators[] = $it;
         } else {

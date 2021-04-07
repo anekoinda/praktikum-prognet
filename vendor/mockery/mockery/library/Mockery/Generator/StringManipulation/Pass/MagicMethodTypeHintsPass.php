@@ -154,7 +154,9 @@ class MagicMethodTypeHintsPass implements Pass
         }
 
         $groupMatches = end($parameterMatches);
-        $parameterNames = is_array($groupMatches) ? $groupMatches : [$groupMatches];
+        $parameterNames = is_array($groupMatches) ?
+            $groupMatches                         :
+            array($groupMatches);
 
         return $parameterNames;
     }

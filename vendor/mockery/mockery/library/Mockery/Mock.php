@@ -53,14 +53,6 @@ class Mock implements MockInterface
     protected $_mockery_ignoreMissing = false;
 
     /**
-     * Flag to indicate whether we want to set the ignoreMissing flag on
-     * mocks generated form this calls to this one
-     *
-     * @var bool
-     */
-    protected $_mockery_ignoreMissingRecursive = false;
-
-    /**
      * Flag to indicate whether we can defer method calls missing from our
      * expectations
      *
@@ -316,13 +308,11 @@ class Mock implements MockInterface
     /**
      * Set mock to ignore unexpected methods and return Undefined class
      * @param mixed $returnValue the default return value for calls to missing functions on this mock
-     * @param bool $recursive Specify if returned mocks should also have shouldIgnoreMissing set
      * @return Mock
      */
-    public function shouldIgnoreMissing($returnValue = null, $recursive = false)
+    public function shouldIgnoreMissing($returnValue = null)
     {
         $this->_mockery_ignoreMissing = true;
-        $this->_mockery_ignoreMissingRecursive = $recursive;
         $this->_mockery_defaultReturnValue = $returnValue;
         return $this;
     }
@@ -749,18 +739,10 @@ class Mock implements MockInterface
                 return null;
 
             case 'object':
-                $mock = \Mockery::mock();
-                if ($this->_mockery_ignoreMissingRecursive) {
-                    $mock->shouldIgnoreMissing($this->_mockery_defaultReturnValue, true);
-                }
-                return $mock;
+                return \Mockery::mock();
 
             default:
-                $mock = \Mockery::mock($returnType);
-                if ($this->_mockery_ignoreMissingRecursive) {
-                    $mock->shouldIgnoreMissing($this->_mockery_defaultReturnValue, true);
-                }
-                return $mock;
+                return \Mockery::mock($returnType);
         }
     }
 

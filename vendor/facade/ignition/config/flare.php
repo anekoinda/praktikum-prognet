@@ -32,8 +32,6 @@ return [
         'report_query_bindings' => true,
         'report_view_data' => true,
         'grouping_type' => null,
-        'report_logs' => true,
-        'maximum_number_of_collected_logs' => 200,
     ],
 
     /*

@@ -102,7 +102,7 @@ final class ParameterizedHeader extends UnstructuredHeader
     }
 
     /**
-     * Render an RFC 2047 compliant header parameter from the $name and $value.
+     * Render a RFC 2047 compliant header parameter from the $name and $value.
      */
     private function createParameter(string $name, string $value): string
     {

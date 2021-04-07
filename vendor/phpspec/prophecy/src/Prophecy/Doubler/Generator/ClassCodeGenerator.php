@@ -11,9 +11,6 @@
 
 namespace Prophecy\Doubler\Generator;
 
-use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
-use Prophecy\Doubler\Generator\Node\TypeNodeAbstract;
-
 /**
  * Class code creator.
  * Generates PHP code for specific class node tree.
@@ -22,8 +19,14 @@ use Prophecy\Doubler\Generator\Node\TypeNodeAbstract;
  */
 class ClassCodeGenerator
 {
+    /**
+     * @var TypeHintReference
+     */
+    private $typeHintReference;
+
     public function __construct(TypeHintReference $typeHintReference = null)
     {
+        $this->typeHintReference = $typeHintReference ?: new TypeHintReference();
     }
 
     /**
@@ -67,32 +70,36 @@ class ClassCodeGenerator
             $method->returnsReference() ? '&':'',
             $method->getName(),
             implode(', ', $this->generateArguments($method->getArguments())),
-            ($ret = $this->generateTypes($method->getReturnTypeNode())) ? ': '.$ret : ''
+            $this->getReturnType($method)
         );
         $php .= $method->getCode()."\n";
 
         return $php.'}';
     }
 
-    private function generateTypes(TypeNodeAbstract $typeNode): string
+    /**
+     * @return string
+     */
+    private function getReturnType(Node\MethodNode $method)
     {
-        if (!$typeNode->getTypes()) {
-            return '';
+        if ($method->hasReturnType()) {
+            return $method->hasNullableReturnType()
+                ? sprintf(': ?%s', $method->getReturnType())
+                : sprintf(': %s', $method->getReturnType());
         }
 
-        // When we require PHP 8 we can stop generating ?foo nullables and remove this first block
-        if ($typeNode->canUseNullShorthand()) {
-            return sprintf( '?%s', $typeNode->getNonNullTypes()[0]);
-        } else {
-            return join('|', $typeNode->getTypes());
-        }
+        return '';
     }
 
     private function generateArguments(array $arguments)
     {
-        return array_map(function (Node\ArgumentNode $argument){
+        $typeHintReference = $this->typeHintReference;
+        return array_map(function (Node\ArgumentNode $argument) use ($typeHintReference) {
+            $php = $argument->isNullable() ? '?' : '';
 
-            $php = $this->generateTypes($argument->getTypeNode());
+            if ($hint = $argument->getTypeHint()) {
+                $php .= $typeHintReference->isBuiltInParamTypeHint($hint) ? $hint : '\\'.$hint;
+            }
 
             $php .= ' '.($argument->isPassedByReference() ? '&' : '');
 

@@ -108,7 +108,11 @@ class LfmItem
 
     public function time()
     {
-        return $this->lfm->lastModified();
+        if (!$this->isDirectory()) {
+            return $this->lfm->lastModified();
+        }
+
+        return false;
     }
 
     public function thumbUrl()

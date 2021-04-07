@@ -18,9 +18,6 @@ use Prophecy\Prediction;
 use Prophecy\Exception\Doubler\MethodNotFoundException;
 use Prophecy\Exception\InvalidArgumentException;
 use Prophecy\Exception\Prophecy\MethodProphecyException;
-use ReflectionNamedType;
-use ReflectionType;
-use ReflectionUnionType;
 
 /**
  * Method prophecy.
@@ -74,59 +71,14 @@ class MethodProphecy
         }
 
         if (true === $reflectedMethod->hasReturnType()) {
+            $type = $reflectedMethod->getReturnType()->getName();
 
-            $reflectionType = $reflectedMethod->getReturnType();
-
-            if ($reflectionType instanceof ReflectionNamedType) {
-                $types = [$reflectionType];
-            }
-            elseif ($reflectionType instanceof ReflectionUnionType) {
-                $types = $reflectionType->getTypes();
-            }
-
-            $types = array_map(
-                function(ReflectionType $type) { return $type->getName(); },
-                $types
-            );
-
-            usort(
-                $types,
-                static function(string $type1, string $type2) {
-
-                    // null is lowest priority
-                    if ($type2 == 'null') {
-                        return -1;
-                    }
-                    elseif ($type1 == 'null') {
-                        return 1;
-                    }
-
-                    // objects are higher priority than scalars
-                    $isObject = static function($type) {
-                        return class_exists($type) || interface_exists($type);
-                    };
-
-                    if($isObject($type1) && !$isObject($type2)) {
-                        return -1;
-                    }
-                    elseif(!$isObject($type1) && $isObject($type2))
-                    {
-                        return 1;
-                    }
-
-                    // don't sort both-scalars or both-objects
-                    return 0;
-                }
-            );
-
-            $defaultType = $types[0];
-
-            if ('void' === $defaultType) {
+            if ('void' === $type) {
                 $this->voidReturnType = true;
             }
 
-            $this->will(function () use ($defaultType) {
-                switch ($defaultType) {
+            $this->will(function () use ($type) {
+                switch ($type) {
                     case 'void': return;
                     case 'string': return '';
                     case 'float':  return 0.0;
@@ -144,7 +96,7 @@ class MethodProphecy
 
                     default:
                         $prophet = new Prophet;
-                        return $prophet->prophesize($defaultType)->reveal();
+                        return $prophet->prophesize($type)->reveal();
                 }
             });
         }

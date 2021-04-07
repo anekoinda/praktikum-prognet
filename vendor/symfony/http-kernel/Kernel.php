@@ -74,11 +74,11 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
 
     private static $freshCache = [];
 
-    public const VERSION = '5.2.4';
-    public const VERSION_ID = 50204;
+    public const VERSION = '5.2.2';
+    public const VERSION_ID = 50202;
     public const MAJOR_VERSION = 5;
     public const MINOR_VERSION = 2;
-    public const RELEASE_VERSION = 4;
+    public const RELEASE_VERSION = 2;
     public const EXTRA_VERSION = '';
 
     public const END_OF_MAINTENANCE = '07/2021';
@@ -199,7 +199,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     }
 
     /**
-     * Gets an HTTP kernel from the container.
+     * Gets a HTTP kernel from the container.
      *
      * @return HttpKernelInterface
      */
@@ -543,8 +543,8 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             if ($collectDeprecations) {
                 restore_error_handler();
 
-                @file_put_contents($buildDir.'/'.$class.'Deprecations.log', serialize(array_values($collectedLogs)));
-                @file_put_contents($buildDir.'/'.$class.'Compiler.log', null !== $container ? implode("\n", $container->getCompiler()->getLog()) : '');
+                file_put_contents($buildDir.'/'.$class.'Deprecations.log', serialize(array_values($collectedLogs)));
+                file_put_contents($buildDir.'/'.$class.'Compiler.log', null !== $container ? implode("\n", $container->getCompiler()->getLog()) : '');
             }
         }
 

@@ -16,7 +16,7 @@
         "laravel/framework": "^7.0",
         "laravel/socialite": "^4.4",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.1",
+        "laravel/ui": "2.4",
         "pusher/pusher-php-server": "^4.1",
         "spatie/laravel-newsletter": "^4.8",
         "srmklive/paypal": "~1.0",

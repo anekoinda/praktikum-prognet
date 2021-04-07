@@ -149,7 +149,7 @@ class RegisterListenersPass implements CompilerPassInterface
                     continue;
                 }
 
-                $dispatcherDefinitions[$attributes['dispatcher']] = $container->getDefinition($attributes['dispatcher']);
+                $dispatcherDefinitions[] = $container->getDefinition($attributes['dispatcher']);
             }
 
             if (!$dispatcherDefinitions) {

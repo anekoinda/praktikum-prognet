@@ -732,7 +732,7 @@ function use(items) {
   } else if (callback && window[callback]) {
     window[callback](getSelectedItems());
   } else if (callback && parent[callback]) {
-    parent[callback](getSelectedItems());
+    parent[callback](getSelecteditems());
   } else if (window.opener) { // standalone button or other situations
     window.opener.SetUrl(getSelectedItems());
   } else {

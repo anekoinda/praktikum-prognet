@@ -1,18 +1,38 @@
-<?php
+<?php namespace League\OAuth1\Client\Tests;
 
-namespace League\OAuth1\Client\Tests;
+/**
+ * Part of the Sentry package.
+ *
+ * NOTICE OF LICENSE
+ *
+ * Licensed under the 3-clause BSD License.
+ *
+ * This source file is subject to the 3-clause BSD License that is
+ * bundled with this package in the LICENSE file.  It is also available at
+ * the following URL: http://www.opensource.org/licenses/BSD-3-Clause
+ *
+ * @package    Sentry
+ * @version    2.0.0
+ * @author     Cartalyst LLC
+ * @license    BSD License (3-clause)
+ * @copyright  (c) 2011 - 2013, Cartalyst LLC
+ * @link       http://cartalyst.com
+ */
 
 use League\OAuth1\Client\Signature\HmacSha1Signature;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 
-class HmacSha1SignatureTest extends TestCase
+class HmacSha1SignatureTest extends PHPUnit_Framework_TestCase
 {
-    protected function tearDown(): void
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
     {
         m::close();
-
-        parent::tearDown();
     }
 
     public function testSigningRequest()
@@ -20,24 +40,14 @@ class HmacSha1SignatureTest extends TestCase
         $signature = new HmacSha1Signature($this->getMockClientCredentials());
 
         $uri = 'http://www.example.com/?qux=corge';
-        $parameters = ['foo' => 'bar', 'baz' => null];
+        $parameters = array('foo' => 'bar', 'baz' => null);
 
         $this->assertEquals('A3Y7C1SUHXR1EBYIUlT3d6QT1cQ=', $signature->sign($uri, $parameters));
     }
 
-    public function testSigningRequestWhereThePortIsNotStandard()
-    {
-        $signature = new HmacSha1Signature($this->getMockClientCredentials());
-
-        $uri = 'http://www.example.com:8080/?qux=corge';
-        $parameters = ['foo' => 'bar', 'baz' => null];
-
-        $this->assertEquals('ECcWxyi5UOC1G0MxH0ygm6Pd6JE=', $signature->sign($uri, $parameters));
-    }
-
     public function testQueryStringFromArray()
     {
-        $array = ['a' => 'b'];
+        $array = array('a' => 'b');
         $res = $this->invokeQueryStringFromData($array);
 
         $this->assertSame(
@@ -48,7 +58,7 @@ class HmacSha1SignatureTest extends TestCase
 
     public function testQueryStringFromIndexedArray()
     {
-        $array = ['a', 'b'];
+        $array = array('a', 'b');
         $res = $this->invokeQueryStringFromData($array);
 
         $this->assertSame(
@@ -59,20 +69,20 @@ class HmacSha1SignatureTest extends TestCase
 
     public function testQueryStringFromMultiDimensionalArray()
     {
-        $array = [
-            'a' => [
-                'b' => [
+        $array = array(
+            'a' => array(
+                'b' => array(
                     'c' => 'd',
-                ],
-                'e' => [
+                ),
+                'e' => array(
                     'f' => 'g',
-                ],
-            ],
+                ),
+            ),
             'h' => 'i',
             'empty' => '',
             'null' => null,
             'false' => false,
-        ];
+        );
 
         // Convert to query string.
         $res = $this->invokeQueryStringFromData($array);
@@ -95,20 +105,20 @@ class HmacSha1SignatureTest extends TestCase
 
         // And ensure it matches the orignal array (approximately).
         $this->assertSame(
-            [
-                'a' => [
-                    'b' => [
+            array(
+                'a' => array(
+                    'b' => array(
                         'c' => 'd',
-                    ],
-                    'e' => [
+                    ),
+                    'e' => array(
                         'f' => 'g',
-                    ],
-                ],
+                    ),
+                ),
                 'h' => 'i',
                 'empty' => '',
                 'null' => '', // null value gets lost in string translation
                 'false' => '', // false value gets lost in string translation
-            ],
+            ),
             $original_array
         );
     }
@@ -118,20 +128,20 @@ class HmacSha1SignatureTest extends TestCase
         $signature = new HmacSha1Signature($this->getMockClientCredentials());
 
         $uri = 'http://www.example.com/';
-        $parameters = [
-            'a' => [
-                'b' => [
+        $parameters = array(
+            'a' => array(
+                'b' => array(
                     'c' => 'd',
-                ],
-                'e' => [
+                ),
+                'e' => array(
                     'f' => 'g',
-                ],
-            ],
+                ),
+            ),
             'h' => 'i',
             'empty' => '',
             'null' => null,
             'false' => false,
-        ];
+        );
 
         $this->assertEquals('ZUxiJKugeEplaZm9e4hshN0I70U=', $signature->sign($uri, $parameters));
     }
@@ -142,15 +152,13 @@ class HmacSha1SignatureTest extends TestCase
         $refl = new \ReflectionObject($signature);
         $method = $refl->getMethod('queryStringFromData');
         $method->setAccessible(true);
-
-        return $method->invokeArgs($signature, [$args]);
+        return $method->invokeArgs($signature, array($args));
     }
 
     protected function getMockClientCredentials()
     {
         $clientCredentials = m::mock('League\OAuth1\Client\Credentials\ClientCredentialsInterface');
         $clientCredentials->shouldReceive('getSecret')->andReturn('clientsecret');
-
         return $clientCredentials;
     }
 }

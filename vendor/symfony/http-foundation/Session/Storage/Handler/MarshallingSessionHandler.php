@@ -28,7 +28,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function open($savePath, $name)
     {
@@ -36,7 +36,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function close()
     {
@@ -44,7 +44,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function destroy($sessionId)
     {
@@ -52,7 +52,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function gc($maxlifetime)
     {
@@ -60,7 +60,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function read($sessionId)
     {
@@ -68,7 +68,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function write($sessionId, $data)
     {
@@ -83,7 +83,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function validateId($sessionId)
     {
@@ -91,7 +91,7 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function updateTimestamp($sessionId, $data)
     {
