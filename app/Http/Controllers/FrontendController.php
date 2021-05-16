@@ -391,6 +391,9 @@ class FrontendController extends Controller
             request()->session()->flash('error','Please try again!');
             return back();
         }
+        if(!error){
+            return redirect()->route('home'); 
+        }
     }
     public function create(array $data){
         return User::create([

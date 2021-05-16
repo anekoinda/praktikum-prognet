@@ -1,33 +1,7 @@
 @extends('frontend.layouts.master')
-@section('title','E-SHOP || HOME PAGE')
+@section('title','NEKO SHOP || HOME PAGE')
 @section('main-content')
 <!-- Slider Area -->
-<section class="hero-slider">
-    <!-- Single Slider -->
-
-    {{-- <div class="single-slider">
-        <div class="container">
-            <div class="row no-gutters">
-                <div class="col-lg-9 offset-lg-3 col-12">
-                    <div class="text-inner">
-                        <div class="row">
-                            <div class="col-lg-7 col-12">
-                                <div class="hero-text">
-                                    <h1><span>UP TO 50% OFF </span>Shirt For Man</h1>
-                                    <p>Maboriosam in a nesciung eget magnae <br> dapibus disting tloctio in the find it pereri <br> odiy maboriosm.</p>
-                                    <div class="button">
-                                        <a href="#" class="btn">Shop Now!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!--/ End Single Slider -->
-</section>
 @if(count($banners)>0)
 <section id="Gslider" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -43,8 +17,8 @@
             <div class="carousel-caption d-none d-md-block text-left">
                 <h1 class="wow fadeInDown">{{$banner->title}}</h1>
                 <p>{!! html_entity_decode($banner->description) !!}</p>
-                <a class="btn btn-lg ws-btn wow fadeInUpBig" href="{{route('product-grids')}}" role="button">Shop Now<i
-                        class="far fa-arrow-alt-circle-right"></i></i></a>
+                <a class="btn btn-lg ws-btn wow fadeInUpBig" href="{{route('product-grids')}}" role="button">Belanja
+                    Sekarang<i class="far fa-arrow-alt-circle-right"></i></i></a>
             </div>
         </div>
         @endforeach
@@ -371,38 +345,7 @@
 </section>
 <!-- /End Cowndown Area -->
 @endforeach --}}
-<!-- Start Shop Blog  -->
-<section class="shop-blog section">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="section-title">
-                    <h2>From Our Blog</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            @if($posts)
-            @foreach($posts as $post)
-            <div class="col-lg-4 col-md-6 col-12">
-                <!-- Start Single Blog  -->
-                <div class="shop-single-blog">
-                    <img src="{{$post->photo}}" alt="{{$post->photo}}">
-                    <div class="content">
-                        <p class="date">{{$post->created_at->format('d M , Y. D')}}</p>
-                        <a href="{{route('blog.detail',$post->slug)}}" class="title">{{$post->title}}</a>
-                        <a href="{{route('blog.detail',$post->slug)}}" class="more-btn">Continue Reading</a>
-                    </div>
-                </div>
-                <!-- End Single Blog  -->
-            </div>
-            @endforeach
-            @endif
 
-        </div>
-    </div>
-</section>
-<!-- End Shop Blog  -->
 
 <!-- Start Shop Services Area -->
 <section class="shop-services section home">
@@ -449,7 +392,6 @@
 </section>
 <!-- End Shop Services Area -->
 
-@include('frontend.layouts.newsletter')
 
 <!-- Modal -->
 @if($product_lists)

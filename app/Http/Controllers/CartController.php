@@ -96,8 +96,9 @@ class CartController extends Controller
             // return $cart;
             $cart->save();
         }
+        return view('frontend.pages.cart');  
         request()->session()->flash('success','Product successfully added to cart.');
-        return back();       
+            
     } 
     
     public function cartDelete(Request $request){

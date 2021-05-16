@@ -105,6 +105,17 @@ class Helper{
             return 0;
         }
     }
+
+    public static function getAllOrder($user_id=''){
+        if(Auth::check()){
+            if($user_id=="") $user_id=auth()->user()->id;
+            return Order:: where('user_id',$user_id)->get();
+        }
+        else{
+            return 0;
+        }
+    }
+
     // Total amount cart
     public static function totalCartPrice($user_id=''){
         if(Auth::check()){

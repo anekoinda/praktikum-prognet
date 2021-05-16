@@ -55,7 +55,13 @@ Route::get('/wishlist',function(){
 })->name('wishlist');
 Route::get('/wishlist/{slug}','WishlistController@wishlist')->name('add-to-wishlist')->middleware('user');
 Route::get('wishlist-delete/{id}','WishlistController@wishlistDelete')->name('wishlist-delete');
+
 Route::post('cart/order','OrderController@store')->name('cart.order');
+Route::resource('/payment','PaymentController');
+
+Route::post('cancel-order/{id}','PaymentController@cancelOrder')->name('cancel-order');
+Route::post('orderan-update/{id}','PaymentController@orderUpdate')->name('orderan.update');
+
 Route::get('order/pdf/{id}','OrderController@pdf')->name('order.pdf');
 Route::get('/income','OrderController@incomeChart')->name('product.order.income');
 // Route::get('/user/chart','AdminController@userPieChart')->name('user.piechart');
@@ -91,6 +97,9 @@ Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
 
 
+Route::get('/order',function(){
+    return view('frontend.pages.order');
+})->name('order');
 
 // Backend section start
 
