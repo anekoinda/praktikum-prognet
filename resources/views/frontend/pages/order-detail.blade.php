@@ -1,5 +1,5 @@
 @extends('frontend.layouts.master')
-@section('title','Order Page')
+@section('title','Cart Page')
 @section('main-content')
 <!-- Breadcrumbs -->
 <div class="breadcrumbs">
@@ -9,7 +9,7 @@
                 <div class="bread-inner">
                     <ul class="bread-list">
                         <li><a href="{{('home')}}">Home<i class="ti-arrow-right"></i></a></li>
-                        <li class="active"><a href="">Order</a></li>
+                        <li class="active"><a href="">Review</a></li>
                     </ul>
                 </div>
             </div>
@@ -24,70 +24,49 @@
         <div class="row">
             <div class="col-12">
                 <!-- Shopping Summery -->
-
                 <table class="table shopping-summery">
-
                     <thead>
                         <tr class="main-hading">
-                            <th>ORDER NUMBER</th>
-                            <th>STATUS</th>
-                            <th>ACTION</th>
-                            <th></th>
-                            <th>UPLOAD BUKTI</th>
-                            <th>SISA WAKTU PEMBAYARAN</th>
+                            <th>PRODUCT</th>
+                            <th class="text-center">UNIT PRICE</th>
+                            <th class="text-center">QUANTITY</th>
                         </tr>
                     </thead>
                     <tbody id="cart_item_list">
-                        @if(Helper::getAllOrder())
-                        @foreach(Helper::getAllOrder() as $key=>$order)
+                        <form action="{{route('cart.update')}}" method="POST">
+                            @csrf
+                            @if(Helper::getAllProductFromCart())
+                            @foreach(Helper::getAllDetailOrder() as $key=>$cart)
+                            <tr>
 
-                        <tr>
-                            <form method="POST" action="{{route('order-detail', $order->id)}}">
-                                @csrf
-                                <td><a href="{{route('order-detail', $order->id)}}">{{$order->order_number}}</a></td>
-                            </form>
-                            <td>{{$order->status}}</td>
-                            <td class="action" data-title="Cancel">
-                                <form method="POST" action="{{route('cancel-order', $order->id)}}">
-                                    @csrf
-
-                                    <a href="{{route('cancel-order', $order->id)}}"><button type="submit"
-                                            class="btn float-right">CANCEL</button></a>
-                                </form>
-                            </td>
-
-                            <form method="POST" action="{{route('orderan.update', $order->id)}}"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <td class="float-right">
-                                    <input type="file" id="bukti" name="bukti">
+                                <td class="product-des" data-title="Description">
+                                    <p class="product-name"><a href="{{route('review-product',$cart->product['slug'])}}"
+                                            target="_blank">{{$cart->product['title']}}</a></p>
+                                    <p class="product-des">{!!($cart['summary']) !!}</p>
                                 </td>
-                                <td class="action" data-title="Update">
-                                    <a href="{{route('orderan.update', $order->id)}}"><button type="submit"
-                                            class="btn float-right">UPLOAD</button></a>
+                                <td class="price" data-title="Price"><span>${{number_format($cart['price'])}}</span>
                                 </td>
-                            </form>
-                            </td>
 
-                            <td>{{$order->created_at->modify('+24 hours')}}</td>
-                        </tr>
-
-                        @endforeach
-                        @else
-                        <tr>
-                            <td class="text-center">
-                                There are no any carts available. <a href="{{route('product-grids')}}"
-                                    style="color:blue;">Continue shopping</a>
-
-                            </td>
-
-                        </tr>
-                        @endif
+                                </td>
+                                <td class="price" data-title="Price"><span>{{number_format($cart['quantity'])}}</span>
+                                </td>
 
 
+                            </tr>
+                            @endforeach
+                            @else
+                            <tr>
+                                <td class="text-center">
+                                    There are no any carts available. <a href="{{route('product-grids')}}"
+                                        style="color:blue;">Continue shopping</a>
+
+                                </td>
+                            </tr>
+                            @endif
+
+                        </form>
                     </tbody>
                 </table>
-
                 <!--/ End Shopping Summery -->
             </div>
         </div>

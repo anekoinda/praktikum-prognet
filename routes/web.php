@@ -35,6 +35,7 @@ Route::get('/about-us','FrontendController@aboutUs')->name('about-us');
 Route::get('/contact','FrontendController@contact')->name('contact');
 Route::post('/contact/message','MessageController@store')->name('contact.store');
 Route::get('product-detail/{slug}','FrontendController@productDetail')->name('product-detail');
+Route::get('review-product/{slug}','FrontendController@reviewProduct')->name('review-product');
 Route::post('/product/search','FrontendController@productSearch')->name('product.search');
 Route::get('/product-cat/{slug}','FrontendController@productCat')->name('product-cat');
 Route::get('/product-sub-cat/{slug}/{sub_slug}','FrontendController@productSubCat')->name('product-sub-cat');
@@ -61,6 +62,9 @@ Route::resource('/payment','PaymentController');
 
 Route::post('cancel-order/{id}','PaymentController@cancelOrder')->name('cancel-order');
 Route::post('orderan-update/{id}','PaymentController@orderUpdate')->name('orderan.update');
+Route::get('/order-detail/{id}',function(){
+    return view('frontend.pages.order-detail');
+})->name('order-detail');
 
 Route::get('order/pdf/{id}','OrderController@pdf')->name('order.pdf');
 Route::get('/income','OrderController@incomeChart')->name('product.order.income');

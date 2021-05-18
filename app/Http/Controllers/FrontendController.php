@@ -54,6 +54,12 @@ class FrontendController extends Controller
         return view('frontend.pages.product_detail')->with('product_detail',$product_detail);
     }
 
+    public function reviewProduct($slug){
+        $product_detail= Product::getProductBySlug($slug);
+        // dd($product_detail);
+        return view('frontend.pages.review')->with('product_detail',$product_detail);
+    }
+
     public function productGrids(){
         $products=Product::query();
         

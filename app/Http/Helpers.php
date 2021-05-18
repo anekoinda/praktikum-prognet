@@ -96,6 +96,10 @@ class Helper{
         return $this->hasOne('App\Models\Product','id','product_id');
     }
 
+    public function order(){
+        return $this->hasOne('App\Models\Order','id','order_id');
+    }
+
     public static function getAllProductFromCart($user_id=''){
         if(Auth::check()){
             if($user_id=="") $user_id=auth()->user()->id;
@@ -104,6 +108,17 @@ class Helper{
         else{
             return 0;
         }
+    }
+
+    public static function getAllDetailOrder($user_id=''){
+        if(Auth::check()){
+            if($user_id=="") $user_id=auth()->user()->id;
+            return Cart::with('product')->where('user_id',$user_id)->where('order_id',126)->get();
+        }
+        else{
+            return 0;
+        }
+        
     }
 
     public static function getAllOrder($user_id=''){
