@@ -52,6 +52,7 @@ class ProductController extends Controller
             'photo'=>'string|required',
             'size'=>'nullable',
             'stock'=>"required|numeric",
+            'weight'=>"required|numeric",
             'cat_id'=>'required|exists:categories,id',
             'brand_id'=>'nullable|exists:brands,id',
             'child_cat_id'=>'nullable|exists:categories,id',
@@ -63,6 +64,7 @@ class ProductController extends Controller
         ]);
 
         $data=$request->all();
+        
         $slug=Str::slug($request->title);
         $count=Product::where('slug',$slug)->count();
         if($count>0){
@@ -77,6 +79,7 @@ class ProductController extends Controller
         else{
             $data['size']='';
         }
+        $data['weight']=(int) $data['weight'];
         // return $size;
         // return $data;
         $status=Product::create($data);
@@ -98,7 +101,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product=Product::find($id);
+        // return $order;
+        return view('backend.product.show')->with('product',$product);
     }
 
     /**

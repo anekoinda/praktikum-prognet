@@ -181,6 +181,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // rizalafani\rajaongkirlaravel\RajaOngkirServiceProvider::class,
+
     ],
 
     /*
@@ -238,6 +240,7 @@ return [
         'PayPal' => Srmklive\PayPal\Facades\PayPal::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
+        // 'RajaOngkir' => rizalafani\rajaongkirlaravel\RajaOngkirFacade::class,
     ],
 
 ];

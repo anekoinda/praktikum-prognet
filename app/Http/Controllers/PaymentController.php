@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Shipping;
@@ -44,46 +45,29 @@ class PaymentController extends Controller
 
     public function orderUpdate(Request $request, $id)
     {
-       
         $order=Order::findOrFail($id);
-        $this->validate($request,[
-            'bukti'=>'required',
-        ]);
 
-        $file = $request->file('bukti');
-        
-		$tujuan_upload = 'storage/1/bukti';
-        $image_name = time().'.'.$file->extension();
-		$file->move($tujuan_upload,$image_name);
-        $status=$order->fill($data)->save();
-        if($status){
-            request()->session()->flash('success','Payment successfully updated');
-        }
-        else{
-            request()->session()->flash('error','Error occurred, Please try again!');
-        }
-        return view('frontend.pages.payment');
+        $request->validate([
+            'bukti' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+    
+        $imageName = time().'.'.$request->bukti->extension();  
+     
+        $request->bukti->move(public_path('images'), $imageName);
+  
+        /* Store $imageName name in DATABASE from HERE */
+        $order->update(['bukti' => $imageName]);
+    
+        return redirect('/cart/order')
+            ->with('success','You have successfully upload image.')
+            ->with('image',$imageName); 
     }
 
     public function orderDetail(Request $request, $id)
     {
-        $order=Order::findOrFail($id);
-        $this->validate($request,[
-            'bukti'=>'required',
-        ]);
-
-        $file = $request->file('bukti');
+        $data = Cart::with('product')->where('user_id', Auth::user()->id)->where('order_id', $id)->get();
         
-		$tujuan_upload = 'storage/1/bukti';
-        $image_name = time().'.'.$file->extension();
-		$file->move($tujuan_upload,$image_name);
-        $status=$order->fill($data)->save();
-        if($status){
-            request()->session()->flash('success','Payment successfully updated');
-        }
-        else{
-            request()->session()->flash('error','Error occurred, Please try again!');
-        }
-        return view('frontend.pages.payment');
+        return view('frontend.pages.order-detail')->with('carts', $data);
     }
+       
 }

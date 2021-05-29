@@ -35,8 +35,8 @@
                     <tbody id="cart_item_list">
                         <form action="{{route('cart.update')}}" method="POST">
                             @csrf
-                            @if(Helper::getAllProductFromCart())
-                            @foreach(Helper::getAllDetailOrder() as $key=>$cart)
+
+                            @foreach($carts as $key=>$cart)
                             <tr>
 
                                 <td class="product-des" data-title="Description">
@@ -54,15 +54,6 @@
 
                             </tr>
                             @endforeach
-                            @else
-                            <tr>
-                                <td class="text-center">
-                                    There are no any carts available. <a href="{{route('product-grids')}}"
-                                        style="color:blue;">Continue shopping</a>
-
-                                </td>
-                            </tr>
-                            @endif
 
                         </form>
                     </tbody>

@@ -2,68 +2,20 @@
 [![Latest Version](https://img.shields.io/github/release/spatie/laravel-newsletter.svg?style=flat-square)](https://github.com/spatie/laravel-newsletter/releases)
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/spatie/laravel-newsletter/run-tests?label=tests)
-[![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-newsletter.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-newsletter)
-[![StyleCI](https://styleci.io/repos/35035915/shield?branch=master)](https://styleci.io/repos/35035915)
+![Check & fix styling](https://github.com/spatie/laravel-newsletter/workflows/Check%20&%20fix%20styling/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-newsletter.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-newsletter)
 
-This package provides an easy way to integrate MailChimp with Laravel 5 and 6. Behind the scenes v3 for the MailChimp API is used. Here are some examples of what you can do with the package:
+This package provides an easy way to integrate MailChimp with Laravel. 
 
-> Please note the at the time of this writing the default merge variables in MailChimp are named `FNAME` and `LNAME`. In our examples we use `firstName` and `lastName` for extra readability. Make sure you rename those merge variables at MailChimp in order to make these examples work.
+Should you find that Mailchimp is too expensive for your use case, consider using [Mailcoach](https://mailcoach.app) instead. Mailcoach is a premium Laravel package that allows you to self host your email lists and campaigns.
 
-```php
-// at the top of your class
-use Newsletter;
+## Support us
 
-// ...
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-newsletter.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-newsletter)
 
-Newsletter::subscribe('rincewind@discworld.com');
+We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
-Newsletter::unsubscribe('the.luggage@discworld.com');
-
-//Merge variables can be passed as the second argument
-Newsletter::subscribe('sam.vines@discworld.com', ['FNAME'=>'Sam', 'LNAME'=>'Vines']);
-
-//Subscribe someone to a specific list by using the third argument:
-Newsletter::subscribe('nanny.ogg@discworld.com', ['FNAME'=>'Nanny', 'LNAME'=>'Ogg'], 'Name of your list');
-
-//Subscribe someone to a specific list and require them to confirm via email:
-Newsletter::subscribePending('nanny.ogg@discworld.com', ['FNAME'=>'Nanny', 'LNAME'=>'Ogg'], 'Name of your list');
-
-//Subscribe or update someone
-Newsletter::subscribeOrUpdate('sam.vines@discworld.com', ['FNAME'=>'Foo', 'LNAME'=>'Bar']);
-
-// Change the email address of an existing subscriber
-Newsletter::updateEmailAddress('rincewind@discworld.com', 'the.luggage@discworld.com');
-
-//Get some member info, returns an array described in the official docs
-Newsletter::getMember('lord.vetinari@discworld.com');
-
-//Get the member activity, returns an array with recent activity for a given user
-Newsletter::getMemberActivity('lord.vetinari@discworld.com');
-
-//Get the members for a given list, optionally filtered by passing a second array of parameters
-Newsletter::getMembers();
-
-//Check if a member is subscribed to a list
-Newsletter::isSubscribed('rincewind@discworld.com');
-
-//Returns a boolean
-Newsletter::hasMember('greebo@discworld.com');
-
-// Get the tags for a member in a given list
-Newsletter::getTags('lord.vetinari@discworld.com');
-
-// Add tags for a member in a given list, any new tags will be created
-Newsletter::addTags(['tag-1', 'tag-2'], 'lord.vetinari@discworld.com');
-
-// Remove tags for a member in a given list
-Newsletter::removeTags(['tag-1', 'tag-2'], 'lord.vetinari@discworld.com');
-
-//If you want to do something else, you can get an instance of the underlying API:
-Newsletter::getApi();
-```
-
-Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
+We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
@@ -133,13 +85,9 @@ return [
 ];
 ```
 
-## Support us
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us). 
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
 ## Usage
+
+Behind the scenes v3 for the MailChimp API is used.
 
 After you've installed the package and filled in the values in the config-file working with this package will be a breeze. All the following examples use the facade. Don't forget to import it at the top of your file.
 

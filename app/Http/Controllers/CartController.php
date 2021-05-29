@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\Wishlist;
+use App\MPodels\Wishlist;
 use App\Models\Cart;
 use Illuminate\Support\Str;
 use Helper;
+use App\City;
+use App\Province;
+use Kavist\RajaOngkir\Facades\RajaOngkir;
 class CartController extends Controller
 {
     protected $product=null;
     public function __construct(Product $product){
         $this->product=$product;
+    }
+
+    public function index(){
+        $cart = Cart::all();
+        return view('frontend.pages.cart'); 
     }
 
     public function addToCart(Request $request){
@@ -39,7 +47,6 @@ class CartController extends Controller
             $already_cart->save();
             
         }else{
-            
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
@@ -47,11 +54,15 @@ class CartController extends Controller
             $cart->quantity = 1;
             $cart->amount=$cart->price*$cart->quantity;
             if ($cart->product->stock < $cart->quantity || $cart->product->stock <= 0) return back()->with('error','Stock not sufficient!.');
+            $cart->weight=$product->weight;
+            $cart->total_weight=$cart->weight*$cart->quantity;
             $cart->save();
             $wishlist=Wishlist::where('user_id',auth()->user()->id)->where('cart_id',null)->update(['cart_id'=>$cart->id]);
         }
+
+        return view('frontend.pages.cart'); 
         request()->session()->flash('success','Product successfully added to cart');
-        return back();       
+            
     }  
 
     public function singleAddToCart(Request $request){
@@ -68,7 +79,7 @@ class CartController extends Controller
         }
         if ( ($request->quant[1] < 1) || empty($product) ) {
             request()->session()->flash('error','Invalid Products');
-            return back();
+            return view('frontend.pages.cart'); 
         }    
 
         $already_cart = Cart::where('user_id', auth()->user()->id)->where('order_id',null)->where('product_id', $product->id)->first();
@@ -92,6 +103,8 @@ class CartController extends Controller
             $cart->price = ($product->price-($product->price*$product->discount)/100);
             $cart->quantity = $request->quant[1];
             $cart->amount=($product->price * $request->quant[1]);
+            $cart->weight=$product->weight;
+            $cart->total_weight=$cart->weight*$request->quant[1];
             if ($cart->product->stock < $cart->quantity || $cart->product->stock <= 0) return back()->with('error','Stock not sufficient!.');
             // return $cart;
             $cart->save();
@@ -137,6 +150,7 @@ class CartController extends Controller
                     if ($cart->product->stock <=0) continue;
                     $after_price=($cart->product->price-($cart->product->price*$cart->product->discount)/100);
                     $cart->amount = $after_price * $quant;
+                    $cart->total_weight = $weight * $quant;
                     // return $cart->price;
                     $cart->save();
                     $success = 'Cart successfully updated!';
@@ -251,6 +265,31 @@ class CartController extends Controller
         //     $cart->fill($data);
         //     $cart->save();
         // }
-        return view('frontend.pages.checkout');
+        
+        $provinces = Province::pluck('name', 'province_id');
+        return view('frontend.pages.checkout', compact('provinces'));
+    }
+
+    public function getCities($id)
+    {
+        $city = City::where('province_id', $id)->pluck('name', 'city_id');
+        return response()->json($city);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function check_ongkir(Request $request)
+    {
+        $cost = RajaOngkir::ongkosKirim([
+            'origin'        => $request->city_origin, // ID kota/kabupaten asal
+            'destination'   => $request->city_destination, // ID kota/kabupaten tujuan
+            'weight'        => $request->weight, // berat barang dalam gram
+            'courier'       => $request->courier // kode kurir pengiriman: ['jne', 'tiki', 'pos'] untuk starter
+        ])->get();
+
+
+        return response()->json($cost);
     }
 }

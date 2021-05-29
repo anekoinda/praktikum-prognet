@@ -12,6 +12,7 @@ use Notification;
 use Helper;
 use Illuminate\Support\Str;
 use App\Notifications\StatusNotification;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -22,8 +23,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders=Order::orderBy('id','DESC')->paginate(10);
-        return view('backend.order.index')->with('orders',$orders);
+        $orders=Order::all();
+        return view('frontend.pages.payment')->with('orders',$orders);
+    }
+
+    public function indexAdmin()
+    {
+        $orders=Order::all();
+        return view('backend.pages.order')->with('orders',$orders);
     }
 
     /**
@@ -44,96 +51,59 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $this->validate($request,[
             'first_name'=>'string|required',
             'last_name'=>'string|required',
             'address1'=>'string|required',
-            'address2'=>'string|nullable',
-            'coupon'=>'nullable|numeric',
             'phone'=>'numeric|required',
-            'post_code'=>'string|nullable',
-            'email'=>'string|required'
+            'province_destination'=>'string|required',
+            'city_destination'=>'string|required',
+            'email'=>'string|required',
+            'courier' => 'string|required',
+            'weight' => 'numeric|required'
         ]);
-        // return $request->all();
-
-       
-        // $cart=Cart::get();
-        // // return $cart;
-        // $cart_index='ORD-'.strtoupper(uniqid());
-        // $sub_total=0;
-        // foreach($cart as $cart_item){
-        //     $sub_total+=$cart_item['amount'];
-        //     $data=array(
-        //         'cart_id'=>$cart_index,
-        //         'user_id'=>$request->user()->id,
-        //         'product_id'=>$cart_item['id'],
-        //         'quantity'=>$cart_item['quantity'],
-        //         'amount'=>$cart_item['amount'],
-        //         'status'=>'new',
-        //         'price'=>$cart_item['price'],
-        //     );
-
-        //     $cart=new Cart();
-        //     $cart->fill($data);
-        //     $cart->save();
-        // }
-
-        // $total_prod=0;
-        // if(session('cart')){
-        //         foreach(session('cart') as $cart_items){
-        //             $total_prod+=$cart_items['quantity'];
-        //         }
-        // }
-
-        $order=new Order();
-        $order_data=$request->all();
-        $order_data['order_number']='ORD-'.strtoupper(Str::random(10));
-        $order_data['user_id']=$request->user()->id;
-        $order_data['shipping_id']=$request->shipping;
-        $shipping=Shipping::where('id',$order_data['shipping_id'])->pluck('price');
-        // return session('coupon')['value'];
-        $order_data['sub_total']=Helper::totalCartPrice();
-        $order_data['quantity']=Helper::cartCount();
-        if(session('coupon')){
-            $order_data['coupon']=session('coupon')['value'];
-        }
-        if($request->shipping){
-            if(session('coupon')){
-                $order_data['total_amount']=Helper::totalCartPrice()+$shipping[0]-session('coupon')['value'];
-            }
-            else{
-                $order_data['total_amount']=Helper::totalCartPrice()+$shipping[0];
-            }
-        }
-        else{
-            if(session('coupon')){
-                $order_data['total_amount']=Helper::totalCartPrice()-session('coupon')['value'];
-            }
-            else{
-                $order_data['total_amount']=Helper::totalCartPrice();
-            }
-        }
-        // return $order_data['total_amount'];
-        $order_data['status']="menunggu verifikasi";
     
-        $order->fill($order_data);
-        $status=$order->save();
-        if($order)
-        // dd($order->id);
-        $users=User::where('role','admin')->first();
-        $details=[
-            'title'=>'New order created',
-            'actionURL'=>route('order.show',$order->id),
-            'fas'=>'fa-file-alt'
+        $data = [
+            'order_number' => 'ORD-'.strtoupper(Str::random(10)),
+            'user_id' => $request->user()->id,
+            'sub_total' => $request->sub_total,
+            'total_amount' => $request->total_price,
+            'quantity' => Helper::cartCount(),
+            'status' => "menunggu verifikasi",
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'regency' => $request->city_destination,
+            'province' => $request->province_destination,
+            'address1' => $request->address1,
+            'shipping_cost' => $request->shipping_price
         ];
-        Notification::send($users, new StatusNotification($details));
-        
-            session()->forget('coupon');
-        
-        Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $order->id]);
 
-        // dd($users);   
-        return view('frontend.pages.payment');     
+        $order = Order::create($data);
+
+        
+        $timeout = $order->created_at->modify('+24 hours');
+
+        Order::where('id', $order->id)->update(['timeout' => $timeout]);
+        Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $order->id]);
+        return redirect('/cart/order');
+        
+        // $users=User::where('role','admin')->first();
+        // $details=[
+        //     'title'=>'New order created',
+        //     'actionURL'=>route('order.show',$order->id),
+        //     'fas'=>'fa-file-alt'
+        // ];
+        // Notification::send($users, new StatusNotification($details));
+        
+        //     session()->forget('coupon');
+        
+        // Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $order->id]);
+
+        // // dd($users);   
+        // return view('frontend.pages.payment');      
         
     }
 
@@ -160,6 +130,30 @@ class OrderController extends Controller
     {
         $order=Order::find($id);
         return view('backend.order.edit')->with('order',$order);
+    }
+
+    public function orderVerif($id)
+    {
+        $order=Order::find($id);
+        $order->status = "sudah terverifikasi";
+        $order->save();
+        return view('backend.order.show')->with('order',$order);
+    }
+
+    public function orderKirim($id)
+    {
+        $order=Order::find($id);
+        $order->status = "pengiriman";
+        $order->save();
+        return view('backend.order.show')->with('order',$order);
+    }
+
+    public function orderSampai($id)
+    {
+        $order=Order::find($id);
+        $order->status = "sampai";
+        $order->save();
+        return view('backend.order.show')->with('order',$order);
     }
 
     /**

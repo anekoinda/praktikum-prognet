@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use Notification;
 use App\Notifications\StatusNotification;
@@ -18,7 +19,6 @@ class ProductReviewController extends Controller
     public function index()
     {
         $reviews=ProductReview::getAllReview();
-        
         return view('backend.review.index')->with('reviews',$reviews);
     }
 
@@ -40,17 +40,29 @@ class ProductReviewController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request,[
             'rate'=>'required|numeric|min:1'
         ]);
         $product_info=Product::getProductBySlug($request->slug);
-        //  return $product_info;
-        // return $request->all();
+        
+        $data = ProductReview::where('product_id', $product_info->id)->get();
+        
+        $user_id = [];
+        foreach ($data as $key => $value) {
+            $user_id[] = $value->user_id;
+        }
+        $is_user_reviewed = in_array(Auth::user()->id, $user_id);
+        
+        if ($is_user_reviewed == true) {
+            request()->session()->flash('error','Gabisa');
+            return redirect()->back();
+        }
+
         $data=$request->all();
         $data['product_id']=$product_info->id;
         $data['user_id']=$request->user()->id;
         $data['status']='active';
-        // dd($data);
         $status=ProductReview::create($data);
 
         $user=User::where('role','admin')->get();

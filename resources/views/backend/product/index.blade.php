@@ -9,27 +9,22 @@
     </div>
   </div>
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary float-left">Product Lists</h6>
+    <h6 class="m-0 font-weight-bold text-primary float-left">Product List</h6>
     <a href="{{route('product.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip"
       data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Product</a>
   </div>
   <div class="card-body">
     <div class="table-responsive">
       @if(count($products)>0)
-      <table class="table table-bordered" id="product-dataTable" width="100%" cellspacing="0">
+      <table class="table table-bordered" id="banner-dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
             <th>S.N.</th>
             <th>Title</th>
             <th>Category</th>
-            <th>Is Featured</th>
             <th>Price</th>
-            <th>Discount</th>
-            <th>Size</th>
-            <th>Condition</th>
             <th>Stock</th>
             <th>Photo</th>
-            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -38,14 +33,9 @@
             <th>S.N.</th>
             <th>Title</th>
             <th>Category</th>
-            <th>Is Featured</th>
             <th>Price</th>
-            <th>Discount</th>
-            <th>Size</th>
-            <th>Condition</th>
             <th>Stock</th>
             <th>Photo</th>
-            <th>Status</th>
             <th>Action</th>
           </tr>
         </tfoot>
@@ -66,11 +56,9 @@
                 @endforeach
               </sub>
             </td>
-            <td>{{(($product->is_featured==1)? 'Yes': 'No')}}</td>
-            <td>Rs. {{$product->price}} /-</td>
-            <td> {{$product->discount}}% OFF</td>
-            <td>{{$product->size}}</td>
-            <td>{{$product->condition}}</td>
+
+            <td>Rp. {{$product->price}}</td>
+
 
             <td>
               @if($product->stock>0)
@@ -91,14 +79,11 @@
                 alt="avatar.png">
               @endif
             </td>
+
             <td>
-              @if($product->status=='active')
-              <span class="badge badge-success">{{$product->status}}</span>
-              @else
-              <span class="badge badge-warning">{{$product->status}}</span>
-              @endif
-            </td>
-            <td>
+              <a href="{{route('product.show',$product->id)}}" class="btn btn-warning btn-sm float-left mr-1"
+                style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="view"
+                data-placement="bottom"><i class="fas fa-eye"></i></a>
               <a href="{{route('product.edit',$product->id)}}" class="btn btn-primary btn-sm float-left mr-1"
                 style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit"
                 data-placement="bottom"><i class="fas fa-edit"></i></a>
@@ -144,7 +129,6 @@
 </div>
 </div>
 @endsection
-
 @push('styles')
 <link href="{{asset('backend/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
@@ -159,7 +143,7 @@
   }
 
   .zoom:hover {
-    transform: scale(5);
+    transform: scale(3.2);
   }
 </style>
 @endpush
@@ -174,12 +158,11 @@
 <!-- Page level custom scripts -->
 <script src="{{asset('backend/js/demo/datatables-demo.js')}}"></script>
 <script>
-  $('#product-dataTable').DataTable( {
-        "scrollX": false
+  $('#banner-dataTable').DataTable( {
             "columnDefs":[
                 {
                     "orderable":false,
-                    "targets":[10,11,12]
+                    "targets":[3,4]
                 }
             ]
         } );

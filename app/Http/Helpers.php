@@ -110,10 +110,10 @@ class Helper{
         }
     }
 
-    public static function getAllDetailOrder($user_id=''){
+    public static function getAllDetailOrder($user_id='', $id_order){
         if(Auth::check()){
             if($user_id=="") $user_id=auth()->user()->id;
-            return Cart::with('product')->where('user_id',$user_id)->where('order_id',126)->get();
+            return Cart::with('product')->where('user_id',$user_id)->where('order_id', $id_order)->get();
         }
         else{
             return 0;
@@ -141,6 +141,19 @@ class Helper{
             return 0;
         }
     }
+
+    public static function totalWeight($user_id=''){
+        if(Auth::check()){
+            $cart=Cart::select('quantity')->where('user_id',$user_id)->where('order_id',null)->get();
+            if($user_id=="") $user_id=auth()->user()->id;
+            $weight=Cart::where('user_id',$user_id)->where('order_id',null)->sum('total_weight');
+            return $weight;
+        }
+        else{
+            return 0;
+        }
+    }
+
     // Wishlist Count
     public static function wishlistCount($user_id=''){
        

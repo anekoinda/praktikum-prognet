@@ -33,7 +33,7 @@
                             <th>STATUS</th>
                             <th>ACTION</th>
                             <th></th>
-                            <th>UPLOAD BUKTI</th>
+                            <th>PEMBAYARAN</th>
                             <th>SISA WAKTU PEMBAYARAN</th>
                         </tr>
                     </thead>
@@ -56,20 +56,33 @@
                                 </form>
                             </td>
 
+                            @if($order->bukti)
+                            <td></td>
+                            <td>
+                                {{$order->bukti}}
+                            </td>
+                            @elseif($order->status == 'cancel')
+                            <td></td>
+                            <td>orderan telah dibatalkan</td>
+                            @else
                             <form method="POST" action="{{route('orderan.update', $order->id)}}"
                                 enctype="multipart/form-data">
                                 @csrf
+                                @method('POST')
                                 <td class="float-right">
                                     <input type="file" id="bukti" name="bukti">
                                 </td>
+                                {{-- <td><button type="submit">Upload</button></td> --}}
                                 <td class="action" data-title="Update">
-                                    <a href="{{route('orderan.update', $order->id)}}"><button type="submit"
-                                            class="btn float-right">UPLOAD</button></a>
+                                    {{-- <a href="{{route('orderan.update', $order->id)}}"> --}}
+                                    <button type="submit" class="btn float-right">UPLOAD</button>
+                                    {{-- </a> --}}
                                 </td>
                             </form>
+                            @endif
                             </td>
 
-                            <td>{{$order->created_at->modify('+24 hours')}}</td>
+                            <td>{{$order->timeout}}</td>
                         </tr>
 
                         @endforeach

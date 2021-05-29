@@ -107,6 +107,16 @@
         <span class="text-danger">{{$message}}</span>
         @enderror
       </div>
+
+      <div class="form-group">
+        <label for="weight">Weight <span class="text-danger">*</span></label>
+        <input id="quantity" type="number" name="weight" min="0" placeholder="Enter weight" value="{{old('weight')}}"
+          class="form-control">
+        @error('weight')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+
       <div class="form-group">
         <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
         <div class="input-group">

@@ -32,6 +32,8 @@
 							<th class="text-center">UNIT PRICE</th>
 							<th class="text-center">QUANTITY</th>
 							<th class="text-center">TOTAL</th>
+							<th class="text-center">WEIGHT</th>
+							<th class="text-center">TOTAL WEIGHT</th>
 							<th class="text-center"><i class="ti-trash remove-icon"></i></th>
 						</tr>
 					</thead>
@@ -74,9 +76,15 @@
 									</div>
 									<!--/ End Input Order -->
 								</td>
+
 								<td class="total-amount cart_single_price" data-title="Total"><span class="money">Rp.
 										{{$cart['amount']}}</span></td>
 
+								<td class="total-amount cart_single_price" data-title="Total"><span class="money">
+										{{$cart['weight']}}</span></td>
+
+								<td class="total-amount cart_single_price" data-title="Total"><span class="money">
+										{{$cart['total_weight']}}</span></td>
 								<td class="action" data-title="Remove"><a href="{{route('cart-delete',$cart->id)}}"><i
 											class="ti-trash remove-icon"></i></a></td>
 							</tr>

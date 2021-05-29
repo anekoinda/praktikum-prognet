@@ -40,16 +40,17 @@ Route::post('/product/search','FrontendController@productSearch')->name('product
 Route::get('/product-cat/{slug}','FrontendController@productCat')->name('product-cat');
 Route::get('/product-sub-cat/{slug}/{sub_slug}','FrontendController@productSubCat')->name('product-sub-cat');
 Route::get('/product-brand/{slug}','FrontendController@productBrand')->name('product-brand');
+
 // Cart section
+Route::get('/cart','CartController@index')->name('cart')->middleware('user');
 Route::get('/add-to-cart/{slug}','CartController@addToCart')->name('add-to-cart')->middleware('user');
 Route::post('/add-to-cart','CartController@singleAddToCart')->name('single-add-to-cart')->middleware('user');
 Route::get('cart-delete/{id}','CartController@cartDelete')->name('cart-delete');
 Route::post('cart-update','CartController@cartUpdate')->name('cart.update');
 
-Route::get('/cart',function(){
-    return view('frontend.pages.cart');
-})->name('cart');
-Route::get('/checkout','CartController@checkout')->name('checkout')->middleware('user');
+Route::get('/checkout','CartController@checkout')->name('checkout');
+Route::post('/checkout/ongkir', 'CartController@check_ongkir')->name('checkout.ongkir');
+Route::get('/checkout/cities/{province_id}', 'CartControllerr@getCities')->name('checkout.get_cities');
 // Wishlist
 Route::get('/wishlist',function(){
     return view('frontend.pages.wishlist');
@@ -57,14 +58,18 @@ Route::get('/wishlist',function(){
 Route::get('/wishlist/{slug}','WishlistController@wishlist')->name('add-to-wishlist')->middleware('user');
 Route::get('wishlist-delete/{id}','WishlistController@wishlistDelete')->name('wishlist-delete');
 
-Route::post('cart/order','OrderController@store')->name('cart.order');
+Route::post('order','OrderController@store')->name('cart.order');
+Route::get('cart/order','OrderController@index')->name('cart.order.index');
+Route::get('admin/order','OrderController@indexAdmin')->name('admin.order.index');
 Route::resource('/payment','PaymentController');
+
+Route::get('order-verif/{id}','OrderController@orderVerif')->name('order-verif');
+Route::get('order-kirim/{id}','OrderController@orderKirim')->name('order-kirim');
+Route::get('order-sampai/{id}','OrderController@orderSampai')->name('order-sampai');
 
 Route::post('cancel-order/{id}','PaymentController@cancelOrder')->name('cancel-order');
 Route::post('orderan-update/{id}','PaymentController@orderUpdate')->name('orderan.update');
-Route::get('/order-detail/{id}',function(){
-    return view('frontend.pages.order-detail');
-})->name('order-detail');
+Route::get('order-detail/{id}','PaymentController@orderDetail')->name('order-detail');
 
 Route::get('order/pdf/{id}','OrderController@pdf')->name('order.pdf');
 Route::get('/income','OrderController@incomeChart')->name('product.order.income');
@@ -106,7 +111,6 @@ Route::get('/order',function(){
 })->name('order');
 
 // Backend section start
-
 Route::group(['prefix'=>'/admin','middleware'=>['auth','admin']],function(){
     Route::get('/','AdminController@index')->name('admin');
     Route::get('/file-manager',function(){
@@ -199,3 +203,11 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Route::get('/provinces', [App\Http\Controllers\RajaOngkirController::class, 'getProvinces']);
+// Route::get('/cities/{id}', [App\Http\Controllers\RajaOngkirController::class, 'getCities']);
+// Route::post('/checkOngkir', [App\Http\Controllers\RajaOngkirController::class, 'checkOngkir']);
+
+Route::get('/ongkir', 'CheckOngkirController@index');
+Route::post('/ongkir', 'CheckOngkirController@check_ongkir');
+Route::get('/cities/{province_id}', 'CheckOngkirController@getCities');

@@ -9,6 +9,7 @@ use App\Models\PostCategory;
 use App\Models\Post;
 use App\Models\Cart;
 use App\Models\Brand;
+use App\Models\ProductReview;
 use App\User;
 use Auth;
 use Session;
@@ -55,8 +56,7 @@ class FrontendController extends Controller
     }
 
     public function reviewProduct($slug){
-        $product_detail= Product::getProductBySlug($slug);
-        // dd($product_detail);
+        $product_detail = Product::getProductBySlug($slug);
         return view('frontend.pages.review')->with('product_detail',$product_detail);
     }
 

@@ -198,7 +198,6 @@
                                     <div class="tab-single review-panel">
                                         <div class="row">
                                             <div class="col-12">
-
                                                 <!-- Review -->
                                                 <div class="comment-review">
                                                     <div class="add-review">
