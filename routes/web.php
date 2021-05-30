@@ -59,8 +59,7 @@ Route::get('/wishlist/{slug}','WishlistController@wishlist')->name('add-to-wishl
 Route::get('wishlist-delete/{id}','WishlistController@wishlistDelete')->name('wishlist-delete');
 
 Route::post('order','OrderController@store')->name('cart.order');
-Route::get('cart/order','OrderController@index')->name('cart.order.index');
-Route::get('admin/order','OrderController@indexAdmin')->name('admin.order.index');
+Route::get('cart/order','OrderController@indexCart')->name('cart.order.index');
 Route::resource('/payment','PaymentController');
 
 Route::get('order-verif/{id}','OrderController@orderVerif')->name('order-verif');
@@ -104,11 +103,6 @@ Route::post('/coupon-store','CouponController@couponStore')->name('coupon-store'
 Route::get('payment', 'PayPalController@payment')->name('payment');
 Route::get('cancel', 'PayPalController@cancel')->name('payment.cancel');
 Route::get('payment/success', 'PayPalController@success')->name('payment.success');
-
-
-Route::get('/order',function(){
-    return view('frontend.pages.order');
-})->name('order');
 
 // Backend section start
 Route::group(['prefix'=>'/admin','middleware'=>['auth','admin']],function(){

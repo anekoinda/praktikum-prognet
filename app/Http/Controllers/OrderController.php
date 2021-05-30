@@ -21,16 +21,16 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function indexCart()
     {
         $orders=Order::all();
         return view('frontend.pages.payment')->with('orders',$orders);
     }
 
-    public function indexAdmin()
+    public function index()
     {
-        $orders=Order::all();
-        return view('backend.pages.order')->with('orders',$orders);
+        $orders=Order::orderBy('id','DESC')->paginate(10);
+        return view('backend.order.index')->with('orders',$orders);
     }
 
     /**

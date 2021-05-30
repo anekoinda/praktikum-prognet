@@ -22,7 +22,6 @@
             <th>Name</th>
             <th>Email</th>
             <th>Quantity</th>
-            <th>Charge</th>
             <th>Total Amount</th>
             <th>Status</th>
             <th>Action</th>
@@ -35,7 +34,6 @@
             <th>Name</th>
             <th>Email</th>
             <th>Quantity</th>
-            <th>Charge</th>
             <th>Total Amount</th>
             <th>Status</th>
             <th>Action</th>
@@ -43,16 +41,14 @@
         </tfoot>
         <tbody>
           @foreach($orders as $order)
-          @php
-          $shipping_charge=DB::table('shippings')->where('id',$order->shipping_id)->pluck('price');
-          @endphp
+
           <tr>
             <td>{{$order->id}}</td>
             <td>{{$order->order_number}}</td>
             <td>{{$order->first_name}} {{$order->last_name}}</td>
             <td>{{$order->email}}</td>
             <td>{{$order->quantity}}</td>
-            <td>@foreach($shipping_charge as $data) $ {{number_format($data,2)}} @endforeach</td>
+
             <td>${{number_format($order->total_amount,2)}}</td>
             <td>
               @if($order->status=='new')

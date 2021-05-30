@@ -11,9 +11,7 @@
   <div class="card-body">
     @if($order)
     <table class="table table-striped table-hover">
-      @php
-      $shipping_charge=DB::table('shippings')->where('id',$order->shipping_id)->pluck('price');
-      @endphp
+
       <thead>
         <tr>
           <th>S.N.</th>
@@ -35,7 +33,7 @@
           <td>{{$order->first_name}} {{$order->last_name}}</td>
           <td>{{$order->email}}</td>
           <td>{{$order->quantity}}</td>
-          <td>@foreach($shipping_charge as $data) $ {{number_format($data,2)}} @endforeach</td>
+          <td>{{$order->shipping_cost}}</td>
           <td>${{number_format($order->total_amount,2)}}</td>
           <td>
             <img src="/images/{{ $order['bukti'] }}" class="img-fluid zoom" style="max-width:80px" />
@@ -94,28 +92,17 @@
                   <td> : {{$order->status}}</td>
                 </tr>
                 <tr>
-                  @php
-                  $shipping_charge=DB::table('shippings')->where('id',$order->shipping_id)->pluck('price');
-                  @endphp
+
                   <td>Shipping Charge</td>
-                  <td> : $ {{number_format($shipping_charge[0],2)}}</td>
+                  <td> : $ {{$order->shipping_cost}}</td>
                 </tr>
-                <tr>
-                  <td>Coupon</td>
-                  <td> : $ {{number_format($order->coupon,2)}}</td>
-                </tr>
+
                 <tr>
                   <td>Total Amount</td>
                   <td> : $ {{number_format($order->total_amount,2)}}</td>
                 </tr>
-                <tr>
-                  <td>Payment Method</td>
-                  <td> : @if($order->payment_method=='cod') Cash on Delivery @else Paypal @endif</td>
-                </tr>
-                <tr>
-                  <td>Payment Status</td>
-                  <td> : {{$order->payment_status}}</td>
-                </tr>
+
+
               </table>
             </div>
           </div>
@@ -140,14 +127,7 @@
                   <td>Address</td>
                   <td> : {{$order->address1}}, {{$order->address2}}</td>
                 </tr>
-                <tr>
-                  <td>Country</td>
-                  <td> : {{$order->country}}</td>
-                </tr>
-                <tr>
-                  <td>Post Code</td>
-                  <td> : {{$order->post_code}}</td>
-                </tr>
+
               </table>
             </div>
           </div>
