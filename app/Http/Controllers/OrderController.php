@@ -63,7 +63,7 @@ class OrderController extends Controller
             'courier' => 'string|required',
             'weight' => 'numeric|required'
         ]);
-    
+
         $data = [
             'order_number' => 'ORD-'.strtoupper(Str::random(10)),
             'user_id' => $request->user()->id,
@@ -82,8 +82,6 @@ class OrderController extends Controller
         ];
 
         $order = Order::create($data);
-
-        
         $timeout = $order->created_at->modify('+24 hours');
 
         Order::where('id', $order->id)->update(['timeout' => $timeout]);
@@ -136,6 +134,25 @@ class OrderController extends Controller
     {
         $order=Order::find($id);
         $order->status = "sudah terverifikasi";
+
+        $user=User::where('role','user')->get();
+        $details=[
+            'title'=>'Transaksi Telah Diverifikasi',
+            'actionURL'=>'',
+            'fas'=>'fa-star'
+        ];
+        Notification::send($user,new StatusNotification($details));
+
+        // $user=User::find($order->user_id);
+        // $data = [
+        //     'nama'=>Auth()->user()->name,
+        //     'message'=>'transaksi anda telah terverifikasi',
+        //     'id'=>$order->id
+        // ];  
+        // $data_encode = json_encode($data);
+        // // dd($data_encode);
+        // $user->createNotifUser($data_encode);
+
         $order->save();
         return view('backend.order.show')->with('order',$order);
     }
@@ -144,6 +161,24 @@ class OrderController extends Controller
     {
         $order=Order::find($id);
         $order->status = "pengiriman";
+
+        $user=User::where('role','user')->get();
+        $details=[
+            'title'=>'Barang Sedang Dikirim Kurir',
+            'actionURL'=>'',
+            'fas'=>'fa-star'
+        ];
+        Notification::send($user,new StatusNotification($details));
+        // $user=User::find($order->user_id);
+        // $data = [
+        //     'nama'=>Auth()->user()->name,
+        //     'message'=>'Orderan anda sedang dikirim kurir',
+        //     'id'=>$order->id
+        // ];  
+        // $data_encode = json_encode($data);
+        // // dd($data_encode);
+        // $user->createNotifUser($data_encode);
+        
         $order->save();
         return view('backend.order.show')->with('order',$order);
     }
@@ -152,6 +187,24 @@ class OrderController extends Controller
     {
         $order=Order::find($id);
         $order->status = "sampai";
+
+        $user=User::where('role','user')->get();
+        $details=[
+            'title'=>'Barang Telah Sampai',
+            'actionURL'=>'',
+            'fas'=>'fa-star'
+        ];
+        Notification::send($user,new StatusNotification($details));
+        // $user=User::find($order->user_id);
+        // $data = [
+        //     'nama'=>Auth()->user()->name,
+        //     'message'=>'Order anda telah sampai',
+        //     'id'=>$order->id
+        // ];  
+        // $data_encode = json_encode($data);
+        // // dd($data_encode);
+        // $user->createNotifUser($data_encode);
+        
         $order->save();
         return view('backend.order.show')->with('order',$order);
     }

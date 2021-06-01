@@ -7,6 +7,7 @@ use App\Models\Settings;
 use App\User;
 use App\Rules\MatchOldPassword;
 use Hash;
+use App\Models\Order;
 use Carbon\Carbon;
 use Spatie\Activitylog\Models\Activity;
 class AdminController extends Controller
@@ -22,8 +23,66 @@ class AdminController extends Controller
      {
        $array[++$key] = [$value->day_name, $value->count];
      }
+     $trans_by_month_year = Order::all()
+        ->groupBy(function ($val) {
+            // return Carbon::parse($val->created_at)->format('m');
+            return Carbon::parse($val->created_at)->format('m') . ' - ' . Carbon::parse($val->created_at)->format('y');
+        });
+
+    $trans_by_year = Order::all()
+        ->groupBy(function ($val) {
+            return Carbon::parse($val->created_at)->format('y');
+        });
+    
+    $trans_graph_label = [];
+    $trans_graph_count = [];
+    foreach ($trans_by_month_year->keys() as $it) {
+        array_push($trans_graph_label, $it);
+        array_push($trans_graph_count, count($trans_by_month_year[$it]));
+    }
+    $trans_by_month_year_success = Order::whereIn('status', ['sampai', 'pengiriman'])
+        ->get()
+        ->groupBy(function ($val) {
+            // return Carbon::parse($val->created_at)->format('m');
+            return '20' . Carbon::parse($val->created_at)->format('y') . ' ' . Carbon::parse($val->created_at)->format('m');
+        });
+    $trans_graph_label_success = [];
+    $trans_graph_count_success = [];
+    foreach ($trans_by_month_year_success->keys()->sort() as $it) {
+        array_push($trans_graph_label_success, $it);
+        array_push($trans_graph_count_success, count($trans_by_month_year_success[$it]));
+    }
+
+    $trans_by_month_year_failed = Order::whereIn('status', ['expired', 'cancel'])
+        ->get()
+        ->groupBy(function ($val) {
+            // return Carbon::parse($val->created_at)->format('m');
+            return '20' . Carbon::parse($val->created_at)->format('y') . ' ' . Carbon::parse($val->created_at)->format('m');
+        });
+    $trans_graph_label_failed = [];
+    $trans_graph_count_failed = [];
+    foreach ($trans_by_month_year_failed->keys()->sort() as $it) {
+        array_push($trans_graph_label_failed, $it);
+        array_push($trans_graph_count_failed, count($trans_by_month_year_failed[$it]));
+    }
+
+    $trans_graph_label = json_encode($trans_graph_label);
+    $trans_graph_count = json_encode($trans_graph_count);
+    $trans_graph_label_success = json_encode($trans_graph_label_success);
+    $trans_graph_count_success = json_encode($trans_graph_count_success);
+    $trans_graph_label_failed = json_encode($trans_graph_label_failed);
+    $trans_graph_count_failed = json_encode($trans_graph_count_failed);
     //  return $data;
-     return view('backend.index')->with('users', json_encode($array));
+     return view('backend.index')
+     ->with('users', json_encode($array))
+     ->with('transbyyear',$trans_by_year)
+     ->with('trans_graph_label',$trans_graph_label)
+     ->with('trans_graph_count',$trans_graph_count)
+     ->with('trans_graph_label_success',$trans_graph_label_success)
+     ->with('trans_graph_count_success',$trans_graph_count_success)
+     ->with('trans_graph_label_failed',$trans_graph_label_failed)
+     ->with('trans_graph_count_failed',$trans_graph_count_failed)
+     ->with('trans_by_month_year',$trans_by_month_year);
     }
 
     public function profile(){

@@ -1,3 +1,4 @@
+<link href="http://127.0.0.1:8000/backend/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <header class="header shop">
     <!-- Topbar -->
     <div class="topbar">
@@ -105,10 +106,15 @@
                             @endphp
                             @endforeach
                             @endif
-                            <a href="{{route('wishlist')}}" class="single-icon"><i class="fa fa-heart-o"></i> <span
-                                    class="total-count">{{Helper::wishlistCount()}}</span></a>
+                            <!-- <a href="{{route('wishlist')}}" class="single-icon"><i class="fa fa-heart-o"></i> <span
+                                    class="total-count">{{Helper::wishlistCount()}}</span></a> -->
                             <!-- Shopping Item -->
                             @auth
+                            <a class="nav-item dropdown no-arrow">
+                                @include('backend.notification.show')
+                            </a>
+                            @endauth
+                            <!-- @auth
                             <div class="shopping-item">
                                 <div class="dropdown-cart-header">
                                     <span>{{count(Helper::getAllProductFromWishlist())}} Items</span>
@@ -140,13 +146,13 @@
                                     <a href="{{route('cart')}}" class="btn animate">Cart</a>
                                 </div>
                             </div>
-                            @endauth
+                            @endauth -->
                             <!--/ End Shopping Item -->
                         </div>
-                        {{-- <div class="sinlge-bar">
+                        <!-- {{-- <div class="sinlge-bar">
                             <a href="{{route('wishlist')}}" class="single-icon"><i class="fa fa-heart-o"
                             aria-hidden="true"></i></a>
-                    </div> --}}
+                    </div> --}} -->
                     <div class="sinlge-bar shopping">
                         <a href="{{route('cart')}}" class="single-icon"><i class="ti-bag"></i> <span
                                 class="total-count">{{Helper::cartCount()}}</span></a>

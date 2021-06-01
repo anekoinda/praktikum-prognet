@@ -38,9 +38,29 @@ class PaymentController extends Controller
         else{
             request()->session()->flash('gabisa euy');
         }
+        // $order->save();
+        // return view('frontend.pages.payment')->with('orders',$order);
+
+        // $user=User::where('role','user')->;
+        // $data = [
+        //     'nama'=>Auth()->user()->name,
+        //     'message'=>'pembatalan transaksi anda berhasil',
+        //     'id'=>$order->id
+        // ];
+        // $data_encode = json_encode($data);
+        // // dd($data_encode);
+        // $user->createNotifUser($data_encode);
+
+        $admin=User::where('role','admin')->get();
+        $data1=[
+            'title'=>'Pembatalan Transaksi',
+            'actionURL'=>route('order.show',$request->id),
+            'fas'=>'fa-exclamation'
+        ];
+        Notification::send($admin,new StatusNotification($data1));
+
         $order->save();
         return view('frontend.pages.payment')->with('orders',$order);
-        
     }
 
     public function orderUpdate(Request $request, $id)
@@ -57,10 +77,38 @@ class PaymentController extends Controller
   
         /* Store $imageName name in DATABASE from HERE */
         $order->update(['bukti' => $imageName]);
-    
+
+        $admin=User::where('role','admin')->get();
+        $data1=[
+            'title'=>'Update Transaksi',
+            'actionURL'=>route('order.show',$request->id),
+            'fas'=>'fa-exclamation'
+        ];
+        Notification::send($admin,new StatusNotification($data1));
+        // $user=User::find($order->user_id);
+        // $data = [
+        //     'nama'=>Auth()->user()->name,
+        //     'message'=>'transaksi anda berhasil diupdate',
+        //     'id'=>$order->id
+        // ];  
+        // $data_encode = json_encode($data);
+        // // dd($data_encode);
+        // $user->createNotifUser($data_encode);
+
         return redirect('/cart/order')
             ->with('success','You have successfully upload image.')
             ->with('image',$imageName); 
+        
+        // $user=User::find($order->user_id);
+        // $data = [
+        //     'nama'=>Auth()->user()->name,
+        //     'message'=>'transaksi anda berhasil diupdate',
+        //     'id'=>$order->id
+        // ];  
+        // $data_encode = json_encode($data);
+        // // dd($data_encode);
+        // $user->createNotifUser($data_encode);
+        
     }
 
     public function orderDetail(Request $request, $id)

@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>E-SHOP || DASHBOARD</title>
-  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.1/chart.min.js" integrity="sha512-dCMdvmRC8BuFAgdVMPrm5MJauIcozqGY8krxgbXyUhVTvR3vzH0x2qW2nB4jFdeymins2ZubDv7osK1roNBKjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Custom fonts for this template-->
     <link href="{{asset('backend/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
